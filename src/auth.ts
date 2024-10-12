@@ -1,11 +1,5 @@
 import { sign, verify } from 'hono/jwt';
-import {
-    userJwtPayloadSchema,
-    users,
-    type UserJwtPayload,
-    loginUserSchema,
-    safeUserSchema,
-} from 'db/schema';
+import * as schema from 'db/schema';
 import { db } from 'db/db';
 import { eq } from 'drizzle-orm';
 import type { Context, Next } from 'hono';
@@ -14,11 +8,11 @@ import { getCookie } from 'hono/cookie';
 export class Auth {
     static async verifyToken(
         token: string
-    ): Promise<UserJwtPayload | undefined> {
+    ): Promise<schema.UserJwtPayload | undefined> {
         try {
             const payload = await verify(token, Bun.env['JWT_SECRET']);
             const validPayload =
-                await userJwtPayloadSchema.safeParseAsync(payload);
+                await schema.userJwtPayloadSchema.safeParseAsync(payload);
 
             return validPayload.data;
         } catch (e) {
@@ -29,11 +23,11 @@ export class Auth {
 
     static async signUserToken(user: any): Promise<string | undefined> {
         try {
-            const validUserData = loginUserSchema.parse(user);
+            const validUserData = schema.loginUserSchema.parse(user);
             const rows = await db
                 .select()
-                .from(users)
-                .where(eq(users.email, validUserData.email))
+                .from(schema.users)
+                .where(eq(schema.users.email, validUserData.email))
                 .limit(1);
             const foundUser = rows[0];
 
@@ -50,7 +44,7 @@ export class Auth {
                 throw new Error('Invalid password');
             }
 
-            const safeUser = safeUserSchema.parse(foundUser);
+            const safeUser = schema.safeUserSchema.parse(foundUser);
             return await sign(
                 {
                     ...safeUser,

@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b55b2a1a-f672-4917-bbf2-9d0f4846694b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "adc5de27-b582-4381-9259-26168badcc7f",
+  "prevId": "b55b2a1a-f672-4917-bbf2-9d0f4846694b",
   "tables": {
     "files": {
       "name": "files",
@@ -45,6 +45,13 @@
         "uploader_id": {
           "name": "uploader_id",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "size": {
+          "name": "size",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

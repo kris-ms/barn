@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { loginUserSchema } from '../db/schema';
+import * as schema from 'db/schema';
 import { Auth } from 'auth';
 import { setCookie } from 'hono/cookie';
 
@@ -23,7 +23,7 @@ loginRoute.get('/', async (c) => {
     return c.render(<Login />);
 });
 
-loginRoute.post('/', zValidator('form', loginUserSchema), async (c) => {
+loginRoute.post('/', zValidator('form', schema.loginUserSchema), async (c) => {
     const token = await Auth.signUserToken(c.req.valid('form'));
 
     if (!token) {

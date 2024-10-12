@@ -1,7 +1,9 @@
 {
   "name": "barn",
   "scripts": {
-    "dev": "bun run --hot src/server.tsx"
+    "dev": "bun run --hot src/server.tsx",
+    "migrate": "bun run src/db/migrate.ts",
+    "seed": "bun run src/db/seed.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.1",

@@ -2,37 +2,83 @@ import { Auth } from 'auth';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type { FC } from 'hono/jsx';
+import { query, db } from 'db/db';
+import { eq } from 'drizzle-orm';
+import * as schema from 'db/schema';
+import { nanoid } from 'nanoid';
 
-const Upload: FC = () => {
+type UploadProps = {
+    folders: Array<schema.BarnFolder>;
+};
+
+const Upload: FC<UploadProps> = ({ folders }) => {
     return (
         <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="text" name="name" />
             <input type="file" name="file" />
+            <select name="folder">
+                {folders.map((folder) => (
+                    <option value={folder.id}>{folder.name}</option>
+                ))}
+            </select>
             <button type="submit">Upload</button>
         </form>
     );
 };
 
-const uploadRoute = new Hono();
+const uploadRoute = new Hono<{ Variables: schema.Variables }>();
 uploadRoute.use(Auth.middleware);
 
 uploadRoute.get('/', async (c) => {
-    return c.render(<Upload />);
+    const user = c.get('jwtPayload');
+    const folders = await query.folders.findMany({
+        where: eq(schema.folders.owner_id, user.id),
+    });
+    return c.render(<Upload folders={folders} />);
 });
 
 uploadRoute.post('/', async (c) => {
+    const user = c.get('jwtPayload');
     const body = await c.req.parseBody();
-    const { file } = body;
-    if (typeof file === 'string') {
+    const { file, folder } = body;
+    if (typeof file === 'string' || !file) {
         throw new HTTPException(400);
     }
 
-    const buffer = await file.arrayBuffer();
-    const bytesWritten = await Bun.write(`./files/${file.name}`, buffer);
+    const fileInfo = {
+        id: nanoid(),
+        name: file.name,
+        created_at: new Date().toISOString(),
+        file_url: `./files/${file.name}`,
+        folder_id: String(folder),
+        uploader_id: user.id,
+        size: file.size,
+    };
 
-    console.log(bytesWritten, `bytes written to ./files/${file.name}`);
+    const validFile = schema.insertFileSchema.parse(fileInfo);
+    if (!validFile) {
+        throw new HTTPException(400);
+    }
 
-    return c.redirect('/');
+    try {
+        const fileRecord = await db
+            .insert(schema.files)
+            .values(validFile)
+            .returning();
+
+        console.log(fileRecord);
+        if (!fileRecord) {
+            throw new HTTPException(500);
+        }
+
+        const buffer = await file.arrayBuffer();
+        const bytesWritten = await Bun.write(`./files/${file.name}`, buffer);
+
+        console.log(bytesWritten, `bytes written to ./files/${file.name}`);
+
+        return c.redirect('/');
+    } catch (e) {
+        console.error(e);
+    }
 });
 
 export default uploadRoute;
