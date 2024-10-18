@@ -2,3 +2,5 @@
 node_modules/
 barn.db
 files/
+
+.env
