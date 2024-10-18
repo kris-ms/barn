@@ -67,6 +67,7 @@ export const files = sqliteTable('files', {
     folder_id: text('folder_id').notNull(),
     uploader_id: text('uploader_id').notNull(),
     size: integer().notNull(),
+    mime_type: text('mime_type').notNull(),
 });
 
 export const filesRelations = relations(files, ({ one }) => ({
@@ -85,3 +86,10 @@ export const selectFileSchema = createSelectSchema(files);
 export const safeFileSchema = selectFileSchema.omit({ folder_id: true });
 
 export type BarnFile = z.infer<typeof selectFileSchema>;
+
+export type UsageData = {
+    totalSize: number;
+    totalFiles: number;
+    totalFolders: number;
+    mostRecentFile?: BarnFile;
+};

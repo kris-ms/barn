@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import type { FC } from 'hono/jsx';
 import * as schema from 'db/schema';
 import { db } from 'db/db';
-import { Auth } from 'auth';
+import { Auth } from 'lib/auth';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import { nanoid } from 'nanoid';

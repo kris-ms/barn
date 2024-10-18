@@ -1,0 +1,1 @@
+ALTER TABLE `files` ADD `mime_type` text NOT NULL;

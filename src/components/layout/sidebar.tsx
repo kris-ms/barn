@@ -1,15 +1,14 @@
 import type { FC } from 'hono/jsx';
 import { css } from 'hono/css';
-import { colors } from 'constants.ts';
+import { COLORS } from 'lib/constants';
 
 const styles = {
     sidebar: css`
         display: flex;
         flex-direction: column;
         background-color: #fff;
-        border-right: 2px solid ${colors.BORDER};
-        flex: 0.25;
-        min-width: 250px;
+        border-right: 2px solid ${COLORS.BORDER};
+        width: 240px;
 
         @media screen and (max-width: 768px) {
             display: none;
@@ -20,7 +19,7 @@ const styles = {
         flex-direction: column;
         gap: 1rem;
         padding: 1rem 0;
-        border-bottom: 2px solid ${colors.BORDER};
+        border-bottom: 2px solid ${COLORS.BORDER};
     `,
     new: css`
         align-self: center;
@@ -29,22 +28,20 @@ const styles = {
         justify-content: center;
         gap: 0.5rem;
         padding: 1rem;
-        border: 2px solid ${colors.BORDER};
+        border: 2px solid ${COLORS.BORDER};
         border-radius: 4rem;
         color: unset;
         text-decoration: unset;
         min-width: 160px;
-        font-size: 0.75rem;
-        font-weight: 500;
+        font-size: 14px;
+        font-weight: 600;
+        transition:
+            background-color 0.1s ease-in-out,
+            border-color 0.1s ease-in-out;
 
         &:hover {
-            background-color: ${colors.PRIMARY};
-            color: ${colors.TEXT_LIGHT};
-            border-color: transparent;
-
-            img {
-                filter: invert(1);
-            }
+            background-color: ${COLORS.LIGHT_GRAY};
+            border-color: ${COLORS.PRIMARY};
         }
     `,
     navList: css`
@@ -63,17 +60,21 @@ const styles = {
         text-decoration: unset;
         font-size: 0.875rem;
         font-weight: 600;
-        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid ${COLORS.BORDER};
+        transition: background-color 0.1s ease-in-out;
 
         &:hover {
-            background-color: ${colors.LIGHT_GRAY};
-            border-bottom-color: transparent;
+            background-color: ${COLORS.LIGHT_LAYER};
+        }
+
+        &:active {
+            background-color: ${COLORS.LIGHT_GRAY};
         }
     `,
 
     selectedLink: css`
         background-color: rgba(0, 0, 0, 1);
-        color: ${colors.TEXT_LIGHT};
+        color: ${COLORS.TEXT_LIGHT};
 
         &:hover {
             background-color: rgba(0, 0, 0, 1);
@@ -96,9 +97,9 @@ const navLinks = [
         icon: '/static/img/folder.svg',
     },
     {
-        name: 'Recent',
+        name: 'Share a Folder',
         path: '/folders',
-        icon: '/static/img/recent.svg',
+        icon: '/static/img/share.svg',
     },
 ];
 
@@ -109,10 +110,10 @@ export const Sidebar: FC<SidebarProps> = ({ path }) => {
                 <a href="/upload" className={styles.new}>
                     <img
                         src="/static/img/add_circle_outline.svg"
-                        alt="New"
+                        alt="Add file"
                         width={24}
                     />
-                    <span>New</span>
+                    <span>Add File</span>
                 </a>
             </section>
 
@@ -132,7 +133,7 @@ export const Sidebar: FC<SidebarProps> = ({ path }) => {
                                     {link.icon && (
                                         <img
                                             src={link.icon}
-                                            alt="Folder"
+                                            alt={link.name}
                                             width={20}
                                             height={20}
                                         />

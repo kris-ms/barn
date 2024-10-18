@@ -2,7 +2,7 @@ import type { FC, PropsWithChildren } from 'hono/jsx';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
 import { css } from 'hono/css';
-import { colors } from 'constants.ts';
+import { COLORS } from 'lib/constants';
 
 type LayoutProps = {
     title: string;
@@ -13,11 +13,14 @@ const styles = {
     bodyContainer: css`
         display: flex;
         flex: 1;
-        color: ${colors.TEXT_DARK};
+        color: ${COLORS.TEXT_DARK};
     `,
     main: css`
-        flex-direction: column;
         flex: 1;
+        overflow: auto;
+        min-height: calc(100vh - 74px);
+        display: flex;
+        flex-direction: column;
     `,
 };
 

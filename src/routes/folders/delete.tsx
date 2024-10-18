@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import * as schema from 'db/schema';
 import { db, query } from 'db/db';
-import { Auth } from 'auth';
+import { Auth } from 'lib/auth';
 import { HTTPException } from 'hono/http-exception';
 import { eq, and } from 'drizzle-orm';
 import { unlink } from 'node:fs/promises';

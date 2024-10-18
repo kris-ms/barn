@@ -1,6 +1,6 @@
 import type { FC } from 'hono/jsx';
 import { css } from 'hono/css';
-import { colors } from 'constants.ts';
+import { COLORS } from 'lib/constants';
 
 type HeaderProps = {
     title: string;
@@ -11,7 +11,10 @@ const styles = {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 2px solid ${colors.BORDER};
+        border-bottom: 2px solid ${COLORS.BORDER};
+        box-shadow: 0px 1px 6px ${COLORS.GRAY};
+        z-index: 10;
+        height: 74px;
     `,
     headerLogo: css`
         object-fit: cover;
@@ -37,7 +40,7 @@ const styles = {
     headerTitle: css`
         font-size: 1rem;
         font-weight: 500;
-        color: ${colors.TEXT_DARK};
+        color: ${COLORS.TEXT_DARK};
         cursor: default;
 
         @media screen and (max-width: 768px) {
@@ -48,17 +51,17 @@ const styles = {
         flex: 1;
         padding: 0.75rem 1rem;
         border-radius: 4rem;
-        border: 2px solid ${colors.BORDER};
+        border: 2px solid ${COLORS.BORDER};
         outline: none;
         font-size: 14px;
         padding-left: 3rem;
 
         &:focus {
-            border-color: ${colors.PRIMARY};
+            border-color: ${COLORS.PRIMARY};
         }
 
         &::placeholder {
-            color: ${colors.TEXT_MEDIUM};
+            color: ${COLORS.TEXT_MEDIUM};
         }
 
         @media screen and (max-width: 480px) {

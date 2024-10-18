@@ -68,21 +68,23 @@ for (const folder of validFolders) {
 const testFiles = [
     {
         id: nanoid(),
-        name: 'test',
+        name: 'test.txt',
         folder_id: validFolders[0].id,
         uploader_id: validUsers[0].id,
         created_at: new Date().toISOString(),
         file_url: 'test',
         size: 1,
+        mime_type: 'text/plain',
     },
     {
         id: nanoid(),
-        name: 'test2',
+        name: 'test2.txt',
         folder_id: validFolders[1].id,
         uploader_id: validUsers[1].id,
         created_at: new Date().toISOString(),
         file_url: 'test2',
         size: 2,
+        mime_type: 'text/plain',
     },
 ];
 

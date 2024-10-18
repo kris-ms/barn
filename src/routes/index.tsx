@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { Auth } from 'auth';
+import { Auth } from 'lib/auth';
 import * as schema from 'db/schema';
 import { query } from 'db/db';
 import { HTTPException } from 'hono/http-exception';
@@ -26,11 +26,26 @@ indexRoute.get('/', async (c) => {
             limit: 5,
         });
 
+        const usageData = await query.files.findMany().then((files) => {
+            const totalSize = files.reduce((acc, file) => {
+                return acc + file.size;
+            }, 0);
+
+            const mostRecentFile = recentFiles[0];
+            return {
+                totalSize,
+                totalFiles: files.length,
+                totalFolders: folders.length,
+                mostRecentFile,
+            };
+        });
+
         return c.render(
             <Dashboard
                 user={user}
                 folders={folders}
                 recentFiles={recentFiles}
+                usageData={usageData}
             />,
             {
                 title: 'Home',

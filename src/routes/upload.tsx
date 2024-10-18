@@ -1,4 +1,4 @@
-import { Auth } from 'auth';
+import { Auth } from 'lib/auth';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type { FC } from 'hono/jsx';
@@ -54,6 +54,7 @@ uploadRoute.post('/', async (c) => {
         folder_id: String(folder),
         uploader_id: user.id,
         size: file.size,
+        mime_type: file.type,
     };
 
     const validFile = schema.insertFileSchema.parse(fileInfo);

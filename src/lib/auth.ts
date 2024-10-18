@@ -3,7 +3,7 @@ import * as schema from 'db/schema';
 import { query } from 'db/db';
 import { eq } from 'drizzle-orm';
 import type { Context, Next } from 'hono';
-import { getCookie } from 'hono/cookie';
+import { getCookie, setCookie } from 'hono/cookie';
 
 export class Auth {
     static async verifyToken(
@@ -79,6 +79,14 @@ export class Auth {
                 return next();
             }
 
+            const validUser = await query.users.findFirst({
+                where: eq(schema.users.id, payload.email),
+            });
+
+            if (!validUser) {
+                return next();
+            }
+
             return c.redirect('/');
         }
 
@@ -89,6 +97,14 @@ export class Auth {
         const payload = await Auth.verifyToken(sessionToken);
         if (!payload) {
             return c.redirect('/login');
+        }
+
+        const validUser = await query.users.findFirst({
+            where: eq(schema.users.id, payload.id),
+        });
+
+        if (!validUser) {
+            setCookie(c, 'session_token', '');
         }
 
         c.set('jwtPayload', payload);

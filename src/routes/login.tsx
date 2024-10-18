@@ -1,7 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { Auth } from 'auth';
+import { Auth } from 'lib/auth';
 import * as schema from 'db/schema';
 import { HTTPException } from 'hono/http-exception';
 import { setCookie } from 'hono/cookie';

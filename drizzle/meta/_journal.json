@@ -15,6 +15,13 @@
       "when": 1728701666086,
       "tag": "0001_bored_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1729252899815,
+      "tag": "0002_lowly_black_bird",
+      "breakpoints": true
     }
   ]
 }
