@@ -33,7 +33,9 @@ uploadRoute.get('/', async (c) => {
     const folders = await query.folders.findMany({
         where: eq(schema.folders.owner_id, user.id),
     });
-    return c.render(<Upload folders={folders} />);
+    return c.render(<Upload folders={folders} />, {
+        title: 'Upload',
+    });
 });
 
 uploadRoute.post('/', async (c) => {
@@ -70,10 +72,12 @@ uploadRoute.post('/', async (c) => {
             throw new HTTPException(500);
         }
 
-        const buffer = await file.arrayBuffer();
-        const bytesWritten = await Bun.write(`./files/${file.name}`, buffer);
+        const writePath = `./files/${fileInfo.folder_id}/${file.name}`;
 
-        console.log(bytesWritten, `bytes written to ./files/${file.name}`);
+        const buffer = await file.arrayBuffer();
+        const bytesWritten = await Bun.write(writePath, buffer);
+
+        console.log(bytesWritten, `bytes written to ${writePath}`);
 
         return c.redirect('/');
     } catch (e) {

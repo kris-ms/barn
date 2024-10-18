@@ -1,6 +1,6 @@
 import { sign, verify } from 'hono/jwt';
 import * as schema from 'db/schema';
-import { db } from 'db/db';
+import { query } from 'db/db';
 import { eq } from 'drizzle-orm';
 import type { Context, Next } from 'hono';
 import { getCookie } from 'hono/cookie';
@@ -14,6 +14,18 @@ export class Auth {
             const validPayload =
                 await schema.userJwtPayloadSchema.safeParseAsync(payload);
 
+            if (!validPayload.success) {
+                return;
+            }
+
+            const validUser = query.users.findFirst({
+                where: eq(schema.users.id, validPayload.data.email),
+            });
+
+            if (!validUser) {
+                return;
+            }
+
             return validPayload.data;
         } catch (e) {
             console.error(e);
@@ -24,12 +36,9 @@ export class Auth {
     static async signUserToken(user: any): Promise<string | undefined> {
         try {
             const validUserData = schema.loginUserSchema.parse(user);
-            const rows = await db
-                .select()
-                .from(schema.users)
-                .where(eq(schema.users.email, validUserData.email))
-                .limit(1);
-            const foundUser = rows[0];
+            const foundUser = await query.users.findFirst({
+                where: eq(schema.users.email, validUserData.email),
+            });
 
             if (!foundUser) {
                 throw new Error('User not found');

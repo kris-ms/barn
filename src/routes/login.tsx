@@ -1,38 +1,45 @@
-import { Hono } from 'hono';
+import type { FC } from 'hono/jsx';
 import { zValidator } from '@hono/zod-validator';
-import * as schema from 'db/schema';
+import { Hono } from 'hono';
 import { Auth } from 'auth';
+import * as schema from 'db/schema';
+import { HTTPException } from 'hono/http-exception';
 import { setCookie } from 'hono/cookie';
 
-const Login = () => {
+const loginRoute = new Hono();
+
+export const Login: FC = () => {
     return (
         <form action="/login" method="post">
-            <label htmlFor="email">Email</label>
             <input type="email" name="email" />
-            <label htmlFor="password">Password</label>
             <input type="password" name="password" />
             <button type="submit">Login</button>
         </form>
     );
 };
 
-const loginRoute = new Hono();
 loginRoute.use(Auth.middleware);
 
 loginRoute.get('/', async (c) => {
-    return c.render(<Login />);
+    return c.render(<Login />, { title: 'Login' });
 });
 
 loginRoute.post('/', zValidator('form', schema.loginUserSchema), async (c) => {
-    const token = await Auth.signUserToken(c.req.valid('form'));
+    try {
+        const validUser = c.req.valid('form');
+        const token = await Auth.signUserToken(validUser);
 
-    if (!token) {
-        // TODO: handle error in form
-        return c.redirect('/login');
+        if (!token) {
+            // TODO: show error
+            throw new HTTPException(500);
+        }
+
+        setCookie(c, 'session_token', token);
+        return c.redirect('/');
+    } catch (e) {
+        console.error(e);
+        throw new HTTPException(400);
     }
-
-    setCookie(c, 'session_token', token);
-    return c.redirect('/');
 });
 
 export default loginRoute;

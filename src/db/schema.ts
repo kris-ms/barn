@@ -56,7 +56,7 @@ export const selectFolderSchema = createSelectSchema(folders);
 export const safeFolderSchema = selectFolderSchema.omit({ owner_id: true });
 
 export type BarnFolder = z.infer<typeof selectFolderSchema> & {
-    files: Array<BarnFile>;
+    files?: Array<BarnFile>;
 };
 
 export const files = sqliteTable('files', {

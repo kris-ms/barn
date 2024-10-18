@@ -46,7 +46,9 @@ folders.get('/', async (c) => {
                 files: true,
             },
         });
-        return c.render(<FoldersList folders={foundFolders} />);
+        return c.render(<FoldersList folders={foundFolders} />, {
+            title: 'Folders',
+        });
     } catch (e) {
         console.error(e);
         throw new HTTPException(500);
