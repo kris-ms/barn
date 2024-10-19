@@ -57,9 +57,11 @@ app.use(
                         rel="stylesheet"
                     />
                 </head>
-                <Layout title={title} path={useRequestContext().req.path}>
-                    <body>{children}</body>
-                </Layout>
+                <body>
+                    <Layout title={title} path={useRequestContext().req.path}>
+                        {children}
+                    </Layout>
+                </body>
             </html>
         );
     })

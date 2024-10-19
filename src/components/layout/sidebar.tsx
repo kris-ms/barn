@@ -9,6 +9,8 @@ const styles = {
         background-color: #fff;
         border-right: 2px solid ${COLORS.BORDER};
         width: 240px;
+        position: sticky;
+        left: 0;
 
         @media screen and (max-width: 768px) {
             display: none;

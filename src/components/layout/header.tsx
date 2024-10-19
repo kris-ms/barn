@@ -15,6 +15,9 @@ const styles = {
         box-shadow: 0px 1px 6px ${COLORS.GRAY};
         z-index: 10;
         height: 74px;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
     `,
     headerLogo: css`
         object-fit: cover;

@@ -17,10 +17,8 @@ const styles = {
     `,
     main: css`
         flex: 1;
-        overflow: auto;
-        min-height: calc(100vh - 74px);
-        display: flex;
-        flex-direction: column;
+        max-height: calc(100vh - 74px);
+        overflow-y: auto;
     `,
 };
 
